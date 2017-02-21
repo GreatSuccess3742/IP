@@ -1,0 +1,36 @@
+# EE569 Homework Assignment #2
+# Date: February 15, 2017
+# Name: Hsiang-Chih, Hsieh
+# ID: 2908-6554-15
+# email: hsie626@usc.edu
+#
+# Compiled on WINDOWS 10 with g++ and OSX
+# Define compiler and linker
+CC=g++
+LN=g++
+All : prob_1_a prob_1_b prob_1_c
+prob_1_a:
+	@echo "Problem 1:a"
+	@echo "compiling and linking the code"
+	$(CC) -c prob_1_a.cpp
+	$(LN) -o solution_1_a prob_1_a.o
+	@echo "running the program, usage: solution inputImageName outputImageName".
+	./solution_1_a images/P1/cup1.raw output/prob_1_a/prob_1_a_Warping1.raw 3 500
+	./solution_1_a images/P1/cup2.raw output/prob_1_a/prob_1_a_Warping2.raw 3 500
+	rm -f solution_1_a prob_1_a.o
+prob_1_b:
+	@echo "Problem 1:b"
+	@echo "compiling and linking the code"
+	$(CC) -c prob_1_b.cpp
+	$(LN) -o solution_1_b prob_1_b.o
+	@echo "running the program, usage: solution inputImageName outputImageName"
+	./solution_1_b images/P1/Hillary.raw output/prob_1_b/prob_1_b_PuzzleMatching.raw 3 512
+	rm -f solution_1_b prob_1_b.o
+prob_1_c:
+	@echo "Problem 1:c"
+	@echo "compiling and linking the code"
+	$(CC) -c prob_1_c.cpp
+	$(LN) -o solution_1_c prob_1_c.o
+	@echo "running the program, usage: solution inputImageName outputImageName"
+	./solution_1_c images/P1/Field.raw output/prob_1_c/prob_1_c.raw 3 512
+	rm -f solution_1_c prob_1_c.o

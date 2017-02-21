@@ -1,0 +1,11 @@
+﻿  prob_1_c.cpp
+c:\users\eric\documents\visual studio 2015\projects\ee569_hw2_2908655415_hsieh\ee569_hw2_2908655415_hsieh\prob_1_c.cpp(61): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+c:\users\eric\documents\visual studio 2015\projects\ee569_hw2_2908655415_hsieh\ee569_hw2_2908655415_hsieh\prob_1_c.cpp(79): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+c:\users\eric\documents\visual studio 2015\projects\ee569_hw2_2908655415_hsieh\ee569_hw2_2908655415_hsieh\prob_1_c.cpp(116): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+c:\users\eric\documents\visual studio 2015\projects\ee569_hw2_2908655415_hsieh\ee569_hw2_2908655415_hsieh\prob_1_c.cpp(341): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\eric\documents\visual studio 2015\projects\ee569_hw2_2908655415_hsieh\ee569_hw2_2908655415_hsieh\prob_1_c.cpp(342): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  EE569_hw2_2908655415_Hsieh.vcxproj -> C:\Users\Eric\Documents\Visual Studio 2015\Projects\EE569_hw2_2908655415_Hsieh\x64\Debug\EE569_hw2_2908655415_Hsieh.exe
+  EE569_hw2_2908655415_Hsieh.vcxproj -> C:\Users\Eric\Documents\Visual Studio 2015\Projects\EE569_hw2_2908655415_Hsieh\x64\Debug\EE569_hw2_2908655415_Hsieh.pdb (Full PDB)
