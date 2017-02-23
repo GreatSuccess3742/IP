@@ -23,8 +23,9 @@ unsigned char **Create2D_Array(int a, int b);
 void Delete2D_Array(unsigned char **MyArray, int a, int b);
 
 void Dithering(unsigned char** Input, unsigned char ** Output);
-void BayerIndex(unsigned char ** Input, double** Iof2n, int i, int j);
-double Tofxy(unsigned char ** Input, int i, int j, int NumberOfPixels);
+void BayerIndex( double** Iof2n, int dim);
+void A4Matrix(double ** Iof2n, int dim);
+double Tofxy( int weight, int NumberOfPixels);
 
 int main(int argc, char *argv[])
 
@@ -140,66 +141,165 @@ void Delete2D_Array(unsigned char **MyArray, int a, int b) {
 }
 
 void Dithering(unsigned char** Input, unsigned char ** Output) {
-	//Creating 512 * 512 Array of Double
-	double** Iof2n = new double *[512];
+	//Creating N * N Array of Double
+	int N = 4;
+	double** Iof2n = new double *[N];
 
-	for (int i = 0; i < 512; i++) {
-		Iof2n[i] = new double[512];
+	for (int i = 0; i < N; i++) {
+		Iof2n[i] = new double[N];
 	}
-	for (int i = 0; i < 512; i++) {
-		for (int j = 0; j < 512; j++) {
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
 			Iof2n[i][j] = 0;
 		}
 	}
-	for (int i = 0; i < 512; i++) {
-		for (int j = 0; j < 512; j++) {
-			BayerIndex(Input, Iof2n, i, j);
-		}
+	
+	BayerIndex(Iof2n,N);
+	//A4Matrix(Iof2n, N);
+	
+	for (int i = 0; i < N; i++) {
+	for (int j = 0; j < N; j++) {
+	cout << Iof2n[i][j] << "   ";
+	}
+	cout << endl;
 	}
 	
 	for (int i = 0; i < 512; i++) {
 		for (int j = 0; j < 512; j++) {
-			double T = Tofxy(Input, i, j, 4);
-			if (Iof2n[i][j] > T) {
+			//4 intensity levels of display
+			if (Input[i][j] >= 0 && Input[i][j] < 64) {
+				Output[i][j] = 0;
+			}
+			else if (Input[i][j] >= 64 && Input[i][j] < 128) {
+				Output[i][j] = 85;
+			}
+			else if (Input[i][j] >= 128 && Input[i][j] < 192) {
+				Output[i][j] = 170;
+			}
+			else {
+				Output[i][j] = 255;
+			}
+			/*
+			if (Input[i][j] > Iof2n[(i%N)][(j%N)]) {
 				Output[i][j] = 0;
 			}
 			else {
 				Output[i][j] = 255;
 			}
-			if (i == 200 && j == 200) {
-				cout << "qwer" << endl;
-			}
+			*/
 		}
 	}
 	
 
-	for (int i = 0; i < 512; i++) {
+	for (int i = 0; i < N; i++) {
 		delete[] Iof2n[i];
 	}
 	delete[] Iof2n;
 }
-void BayerIndex(unsigned char ** Input, double** Iof2n,int i, int j) {
+void BayerIndex( double** Iof2n,int dim) {
+	double I2[2][2] = { {0,2},{3,1} };
+	int i = 0;
+	int j = 0;
+	Iof2n[i][j] = Tofxy(I2[i][j],4);
+	Iof2n[i][j+1] = Tofxy( I2[i][j+1], 4);
+	Iof2n[i+1][j] = Tofxy( I2[i+1][j], 4);
+	Iof2n[i+1][j+1] = Tofxy( I2[i+1][j+1], 4);
 
-	/*Iof2n[i][j] = (4 * (double)Input[i][j] / 255.0) / 4;
-	Iof2n[i][j+1] = (4 * (double)Input[i][j+1]/255.0 + 2) / 4;
-	Iof2n[i+1][j] = (4 * (double)Input[i+1][j]/255.0 + 3 )/ 4;
-	Iof2n[i+1][j+1] =( 4 * (double)Input[i+1][j+1]/255.0 +1) / 4;*/
-	int x1, x2, y1, y2;
-	x1 = i;
-	y1 = j;
-	x2 = i + 1;
-	y2 = j + 1;
+	double I4[4][4];
+	for (int i = 0; i < 4; i+=2) {
+		for (int j = 0; j < 4; j += 2) {
+			if (i == 0 && j == 0) {
+				I4[i][j] = 4 * I2[i/2][j/2];
+				I4[i][j + 1] = 4 * I2[i/2][j/2 + 1];
+				I4[i + 1][j] = 4 * I2[i/2 + 1][j/2];
+				I4[i + 1][j + 1] = 4 * I2[i/2 + 1][j/2 + 1];
+			}
+			else if (i == 0 && j == 2) {
+				I4[i][j] = 4 * I2[0][0] + 2;
+				I4[i][j + 1] = 4 * I2[0][1] +2;
+				I4[i + 1][j] = 4 * I2[1][0] +2;
+				I4[i + 1][j + 1] = 4 * I2[1][1] +2 ;
+			}
+			else if (i == 2 && j == 0) {
+				I4[i][j] = 4 * I2[0][0]+3;
+				I4[i][j + 1] = 4 * I2[0][1]+3;
+				I4[i + 1][j] = 4 * I2[1][0]+3;
+				I4[i + 1][j + 1] = 4 * I2[1][1]+3;
+			}
+			else if (i == 2 && j == 2) {
+				I4[i][j] = 4 * I2[0][0]+1;
+				I4[i][j + 1] = 4 * I2[0][1]+1;
+				I4[i + 1][j] = 4 * I2[1][0]+1;
+				I4[i + 1][j + 1] = 4 * I2[1][1]+1;
+			}
+		}
+	}
+	double I8[8][8];
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			I8[i][j] = I4[i][j] * 4;
+		}
+	}
 
-	if (x2 > 511) {
-		x2 = 511;
+	for (int i = 0; i < 8; i += 4) {
+		for (int j = 0; j < 8; j += 4) {
+
+			if (i == 0 && j == 4) {
+				for (int k = 0; k < 4; k++) {
+					for (int l = 0; l < 4; l++) {
+						I8[i + k][j + l] = I8[k][l] + 2;
+					}
+				}
+			}
+			else if (i == 4 && j == 0) {
+				for (int k = 0; k < 4; k++) {
+					for (int l = 0; l < 4; l++) {
+						I8[i + k][j + l] = I8[k][l] + 3;
+					}
+				}
+			}
+			else if (i == 4 && j == 4) {
+				for (int k = 0; k < 4; k++) {
+					for (int l = 0; l < 4; l++) {
+						I8[i + k][j + l] = I8[k][l] + 1;
+					}
+				}
+			}
+		}
 	}
-	if (y2 > 511) {
-		y2 = 511;
+
+	if (dim == 8) {
+		for (int i = 0; i < dim; i++) {
+			for (int j = 0; j < dim; j++) {
+				Iof2n[i][j] = Tofxy(I8[i][j],(dim * dim));
+				
+			}
+		}
 	}
-	Iof2n[i][j] = ( (4 * (double)Input[x1][y1] / 255.0) + (4 * (double)Input[x1][y2] / 255.0 + 2) + (4 * (double)Input[x2][y1] / 255.0 + 3) + (4 * (double)Input[x2][y2] / 255.0 + 1) );
+	else if (dim == 4) {		
+		for (int i = 0; i < dim; i++) {
+			for (int j = 0; j < dim; j++) {
+				Iof2n[i][j] = Tofxy(I4[i][j], (dim * dim));
+			}
+		}
+	}
 }
-double Tofxy(unsigned char ** Input, int i, int j, int NumberOfPixels) {
+void A4Matrix(double ** Iof2n,int dim) {
+	double temp[4][4] = {
+		{ 14,10,11,15 },
+		{ 9,3,0,4 },
+		{ 8,2,1,5 },
+		{ 13,7,6,12 }
+	};
+	for (int i = 0; i < dim; i++) {
+		for (int j = 0; j < dim; j++) {
+			Iof2n[i][j] = Tofxy(temp[i][j],(dim*dim));
+		}
+	}
+
+}
+double Tofxy( int weight, int NumberOfPixels) {
 	double ans = 0;
-	ans = ((double)Input[i][j] / 255.0 + 0.5) / NumberOfPixels *255;
+	ans = ((double)weight + 0.5) / NumberOfPixels *255;
 	return ans;
 }
