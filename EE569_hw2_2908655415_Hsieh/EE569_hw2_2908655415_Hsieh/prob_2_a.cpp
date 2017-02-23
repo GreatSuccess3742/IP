@@ -23,9 +23,14 @@ unsigned char **Create2D_Array(int a, int b);
 void Delete2D_Array(unsigned char **MyArray, int a, int b);
 
 void Dithering(unsigned char** Input, unsigned char ** Output);
+<<<<<<< Updated upstream
 void BayerIndex( double** Iof2n, int dim);
 void A4Matrix(double ** Iof2n, int dim);
 double Tofxy( int weight, int NumberOfPixels);
+=======
+void BayerIndex(unsigned char ** Input, double** Iof2n, int i, int j);
+double Tofxy(unsigned char ** Input, int i, int j, int NumberOfPixels);
+>>>>>>> Stashed changes
 
 int main(int argc, char *argv[])
 
@@ -141,6 +146,7 @@ void Delete2D_Array(unsigned char **MyArray, int a, int b) {
 }
 
 void Dithering(unsigned char** Input, unsigned char ** Output) {
+<<<<<<< Updated upstream
 	//Creating N * N Array of Double
 	int N = 4;
 	double** Iof2n = new double *[N];
@@ -301,5 +307,51 @@ void A4Matrix(double ** Iof2n,int dim) {
 double Tofxy( int weight, int NumberOfPixels) {
 	double ans = 0;
 	ans = ((double)weight + 0.5) / NumberOfPixels *255;
+=======
+	//Creating 512 * 512 Array of Double
+	double** Iof2n = new double *[512];
+
+	for (int i = 0; i < 512; i++) {
+		Iof2n[i] = new double[512];
+	}
+	for (int i = 0; i < 512; i++) {
+		for (int j = 0; j < 512; j++) {
+			Iof2n[i][j] = 0;
+		}
+	}
+	for (int i = 0; i < 512; i += 2) {
+		for (int j = 0; j < 512; j += 2) {
+			BayerIndex(Input, Iof2n, i, j);
+		}
+	}
+	
+	for (int i = 0; i < 512; i++) {
+		for (int j = 0; j < 512; j++) {
+			if (Iof2n[i][j] > Tofxy(Input, i, j, 4)) {
+				Output[i][j] = 0;
+			}
+			else {
+				Output[i][j] = 255;
+			}
+		}
+	}
+	cout << Iof2n[100][100] << endl;
+	cout << Tofxy(Input, 100, 100, 4) << endl;
+
+	for (int i = 0; i < 512; i++) {
+		delete[] Iof2n[i];
+	}
+	delete[] Iof2n;
+}
+void BayerIndex(unsigned char ** Input, double** Iof2n,int i, int j) {
+	Iof2n[i][j] = (4 * (double)Input[i][j] / 255.0) / 4;
+	Iof2n[i][j+1] = (4 * (double)Input[i][j+1]/255.0 + 2) / 4;
+	Iof2n[i+1][j] = (4 * (double)Input[i+1][j]/255.0 + 3 )/ 4;
+	Iof2n[i+1][j+1] =( 4 * (double)Input[i+1][j+1]/255.0 +1) / 4;
+}
+double Tofxy(unsigned char ** Input, int i, int j, int NumberOfPixels) {
+	double ans = 0;
+	ans = ((double)Input[i][j]/255.0 + 0.5) / NumberOfPixels; //* 255;
+>>>>>>> Stashed changes
 	return ans;
 }
