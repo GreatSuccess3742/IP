@@ -34,3 +34,11 @@ prob_1_c:
 	@echo "running the program, usage: solution inputImageName outputImageName"
 	./solution_1_c images/P1/Field.raw output/prob_1_c/prob_1_c.raw 3 512
 	rm -f solution_1_c prob_1_c.o
+prob_2_a:
+	@echo "Problem a:a"
+	@echo "compiling and linking the code"
+	$(CC) -c prob_2_a.cpp
+	$(LN) -o solution_2_a prob_2_a.o
+	@echo "running the program, usage: solution inputImageName outputImageName"
+	./solution_2_a images/P2/man.raw output/prob_2_a/prob_2_a.raw 512
+	rm -f solution_2_a prob_2_a.o
