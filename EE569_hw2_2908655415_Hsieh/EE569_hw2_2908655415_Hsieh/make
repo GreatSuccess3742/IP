@@ -1,0 +1,11 @@
+CC=g++
+LN=g++
+All : prob_2_b
+prob_2_b:
+	@echo "Problem 2:b"
+	@echo "compiling and linking the code"
+	$(CC) -c prob_2_b.cpp
+	$(LN) -o solution_2_b prob_2_b.o
+	@echo "running the program, usage: solution inputImageName outputImageName"
+	./solution_2_b images/P2/man.raw output/prob_2_b/prob_2_b.raw 512
+	rm -f solution_2_b prob_2_b.o
